@@ -24,6 +24,13 @@
         private Label lblSolved;
         private Label lblPending;
 
+        private Panel card4;
+
+        private Label lblCriminals;
+
+
+
+        private Button btnSettings;
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -51,11 +58,14 @@
             lblSolved = new Label();
             card3 = new Panel();
             lblPending = new Label();
+            card4 = new Panel();
+            lblCriminals = new Label();
             sidebar.SuspendLayout();
             topPanel.SuspendLayout();
             card1.SuspendLayout();
             card2.SuspendLayout();
             card3.SuspendLayout();
+            card4.SuspendLayout();
             SuspendLayout();
             // 
             // sidebar
@@ -245,12 +255,34 @@
             lblPending.TabIndex = 0;
             lblPending.Text = "Pending Cases\n40";
             // 
+            // card4
+            // 
+            card4.BackColor = Color.White;
+            card4.Controls.Add(lblCriminals);
+            card4.Location = new Point(320, 370);
+            card4.Name = "card4";
+            card4.Size = new Size(280, 160);
+            card4.TabIndex = 0;
+            // 
+            // lblCriminals
+            // 
+            lblCriminals.AutoSize = true;
+            lblCriminals.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            lblCriminals.Location = new Point(50, 40);
+            lblCriminals.Name = "lblCriminals";
+            lblCriminals.Size = new Size(198, 108);
+            lblCriminals.TabIndex = 0;
+            lblCriminals.Text = "Criminals\n0";
+
+
+            // 
             // DashboardForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 245, 250);
             ClientSize = new Size(1750, 1000);
+            Controls.Add(card4);
             Controls.Add(sidebar);
             Controls.Add(topPanel);
             Controls.Add(card1);
@@ -271,6 +303,8 @@
             card2.PerformLayout();
             card3.ResumeLayout(false);
             card3.PerformLayout();
+            card4.ResumeLayout(false);
+            card4.PerformLayout();
             ResumeLayout(false);
         }
     }

@@ -1,6 +1,8 @@
 ﻿using CrimeManagement.UI.Data;
 using CrimeManagement.UI.Models;
 
+using System.Speech.Recognition;
+
 namespace CrimeManagement.UI.Forms
 {
     public partial class FIRForm : Form
@@ -13,22 +15,31 @@ namespace CrimeManagement.UI.Forms
 
             LoadFIRs();
 
-            dgvFIRs.CellClick += dgvFIRs_CellClick;
+            dgvFIRs.CellClick +=
+                dgvFIRs_CellClick;
 
-            txtSearch.TextChanged += txtSearch_TextChanged;
+            txtSearch.TextChanged +=
+                txtSearch_TextChanged;
 
-            btnSave.Click += btnSave_Click;
+            btnSave.Click +=
+                btnSave_Click;
 
-            btnUpdate.Click += btnUpdate_Click;
+            btnUpdate.Click +=
+                btnUpdate_Click;
 
-            btnDelete.Click += btnDelete_Click;
+            btnDelete.Click +=
+                btnDelete_Click;
 
-            btnClear.Click += btnClear_Click;
+            btnClear.Click +=
+                btnClear_Click;
+
+            btnVoice.Click +=
+                btnVoice_Click;
         }
 
         // SAVE FIR
         private void btnSave_Click(
-            object sender,
+            object? sender,
             EventArgs e)
         {
             using var context =
@@ -61,7 +72,7 @@ namespace CrimeManagement.UI.Forms
             ClearFields();
         }
 
-        // LOAD ALL FIRS
+        // LOAD FIRS
         private void LoadFIRs()
         {
             using var context =
@@ -73,7 +84,7 @@ namespace CrimeManagement.UI.Forms
 
         // GRID SELECT
         private void dgvFIRs_CellClick(
-            object sender,
+            object? sender,
             DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -105,14 +116,15 @@ namespace CrimeManagement.UI.Forms
 
         // UPDATE FIR
         private void btnUpdate_Click(
-            object sender,
+            object? sender,
             EventArgs e)
         {
             using var context =
                 new AppDbContext();
 
             var fir =
-                context.FIRs.Find(selectedId);
+                context.FIRs.Find(
+                    selectedId);
 
             if (fir != null)
             {
@@ -141,7 +153,7 @@ namespace CrimeManagement.UI.Forms
 
         // DELETE FIR
         private void btnDelete_Click(
-            object sender,
+            object? sender,
             EventArgs e)
         {
             if (dgvFIRs.SelectedRows.Count > 0)
@@ -185,7 +197,7 @@ namespace CrimeManagement.UI.Forms
 
         // SEARCH FIR
         private void txtSearch_TextChanged(
-            object sender,
+            object? sender,
             EventArgs e)
         {
             using var context =
@@ -194,20 +206,20 @@ namespace CrimeManagement.UI.Forms
             dgvFIRs.DataSource =
                 context.FIRs
                 .Where(x =>
-                    x.ComplainantName.Contains(
-                        txtSearch.Text)
+                    x.ComplainantName
+                    .Contains(txtSearch.Text)
                     ||
-                    x.CrimeType.Contains(
-                        txtSearch.Text)
+                    x.CrimeType
+                    .Contains(txtSearch.Text)
                     ||
-                    x.Status.Contains(
-                        txtSearch.Text))
+                    x.Status
+                    .Contains(txtSearch.Text))
                 .ToList();
         }
 
-        // CLEAR FIELDS
+        // CLEAR
         private void btnClear_Click(
-            object sender,
+            object? sender,
             EventArgs e)
         {
             ClearFields();
@@ -225,6 +237,48 @@ namespace CrimeManagement.UI.Forms
             cmbStatus.SelectedIndex = -1;
 
             selectedId = 0;
+        }
+
+        // VOICE REPORTING
+        private void btnVoice_Click(
+            object? sender,
+            EventArgs e)
+        {
+            try
+            {
+                SpeechRecognitionEngine recognizer =
+                    new SpeechRecognitionEngine();
+
+                recognizer.SetInputToDefaultAudioDevice();
+
+                recognizer.LoadGrammar(
+                    new DictationGrammar());
+
+                MessageBox.Show(
+                    "Speak your FIR description now");
+
+                RecognitionResult result =
+                    recognizer.Recognize();
+
+                if (result != null)
+                {
+                    txtDescription.Text =
+                        result.Text;
+
+                    MessageBox.Show(
+                        "Voice Captured Successfully");
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "No voice detected");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    ex.Message);
+            }
         }
     }
 }
