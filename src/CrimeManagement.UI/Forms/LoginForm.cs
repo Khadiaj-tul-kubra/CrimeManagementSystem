@@ -1,5 +1,4 @@
 using CrimeManagement.UI.Data;
-using System.Linq;
 
 namespace CrimeManagement.UI.Forms
 {
@@ -8,19 +7,36 @@ namespace CrimeManagement.UI.Forms
         public LoginForm()
         {
             InitializeComponent();
+
+            btnLogin.Click +=
+                btnLogin_Click;
+
+            btnRegister.Click +=
+                btnRegister_Click;
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        // LOGIN
+        private void btnLogin_Click(
+            object? sender,
+            EventArgs e)
         {
-            using var context = new AppDbContext();
+            using var context =
+                new AppDbContext();
 
-            var user = context.Users.FirstOrDefault(x =>
-                x.Email == txtEmail.Text &&
-                x.Password == txtPassword.Text);
+            var user =
+                context.Users.FirstOrDefault(
+                    x =>
+                    x.Email == txtEmail.Text
+                    &&
+                    x.Password == txtPassword.Text);
 
             if (user != null)
             {
-                DashboardForm dashboard = new DashboardForm();
+                MessageBox.Show(
+                    $"Welcome {user.Role}");
+
+                DashboardForm dashboard =
+                    new DashboardForm();
 
                 dashboard.Show();
 
@@ -29,12 +45,19 @@ namespace CrimeManagement.UI.Forms
             else
             {
                 MessageBox.Show(
-                    "Invalid Email or Password",
-                    "Login Failed",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                    "Invalid Email or Password");
             }
+        }
+
+        // REGISTER
+        private void btnRegister_Click(
+            object? sender,
+            EventArgs e)
+        {
+            RegisterForm register =
+                new RegisterForm();
+
+            register.ShowDialog();
         }
     }
 }
